@@ -12,6 +12,7 @@ Currently more items at once are supported but not optimized properly.
 - Implement logs
 - Parsing is too complex, incorporating html parser might work better
 - Overall general redundant complexity of the code
+- Prevent script crash when Steam is unavailable
 
 ## Dependencies
 - Http requests ( pip install requests )
