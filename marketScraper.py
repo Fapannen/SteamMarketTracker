@@ -31,7 +31,7 @@ def parsePrice(s):
         return float(mult + price)
     return float(temp.split(" ")[0].replace('$', ""))
 """
-----------------------------------------------------
+-----------------------------------------------------------------------------------
 """
 
 class SearchEntry:
@@ -54,7 +54,7 @@ class SearchEntry:
         print()
 
 """
-----------------------------------------------------
+----------------------------------------------------------------------------------
 """
 
 def getUrlContent(item):
@@ -75,7 +75,7 @@ def getInitialEntries(items):
                 price = parsePrice(line.split("data-currency=")[1])
                 searchEntry.price = price
                 initEntries.append(searchEntry)
-            
+                
     return initEntries
 
 def findEntryByName(namee, entries):
@@ -83,9 +83,22 @@ def findEntryByName(namee, entries):
         if entry.name == namee:
             return entry
 
+def getItemsToTrack():
+    items = []
+    while True:
+        param = input("Track this item: ")
+        if param == '':
+            break
+        else:
+            items.append(param)
+    return items
+
+def printEntries(ent):
+    for entry in ent:
+        entry.printInfo()
+
 def keepTracking(items, entries):
     i = 0
-    
     while True:
         if debug:
             print("Debug keepTracking iterations : " + str(i))
@@ -93,7 +106,7 @@ def keepTracking(items, entries):
         for item in items:
             time.sleep(60) # Steam delay
             content = getUrlContent(item)
-        
+            
             for line in content.split("market_listing_row market_recent_listing_row market_listing_searchresult"):
                 name = line.split("data-hash-name=")
                 if len(name) > 1:
@@ -114,15 +127,11 @@ def keepTracking(items, entries):
 
 def main():
     print("Welcome to Steam Market Item Tracker")
-    print("Please enter name of the desired item. If you want to track more items, split them by '|' ")
-    print("ie. 'Huntsman Blue|Ak Vulcan|AWP Hyper Beast' ")
+    print("Enter items you want to be tracked. Press Enter with blank input to end giving parameters and start tracking")
     print()
-    items = input('Name of searched Item - ')
-    track = items.split('|')
-    entries = getInitialEntries(track)
-    for entry in entries:
-        entry.printInfo()
-        
-    keepTracking(track, entries)
+    it = getItemsToTrack()
+    entries = getInitialEntries(it)
+    printEntries(entries) 
+    keepTracking(it, entries)
 
 main()
