@@ -1,7 +1,10 @@
 import requests
 import time
+import datetime
 
-debug = False
+DEBUG = False
+LOG = True
+LOG_DELIM = "#"
 
 """
 PARSERS
@@ -100,7 +103,7 @@ def printEntries(ent):
 def keepTracking(items, entries):
     i = 0
     while True:
-        if debug:
+        if DEBUG:
             print("Debug keepTracking iterations : " + str(i))
         
         for item in items:
@@ -123,6 +126,12 @@ def keepTracking(items, entries):
                         print("Value updated...")
                         print("-" * 50)
                         print()
+                        if LOG:
+                            with open("log.txt", 'a') as logfile:
+                                name = clone.name
+                                if '★' in name:
+                                    name.replace("★ ", "") # Encoding conflicts
+                                logfile.write(name + LOG_DELIM + str(datetime.datetime.now()) + LOG_DELIM + str(clone.price) + "\n")
         i += 1
 
 def main():
