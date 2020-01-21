@@ -6,7 +6,8 @@ from win10toast import ToastNotifier
 DEBUG = False
 LOG = True
 LOG_DELIM = "#"
-NOTIFICATIONS = True
+NOTIFICATIONS = False
+APPID = 730 # Make sure only CSGO Items are accepted
 
 """
 PARSERS
@@ -79,7 +80,10 @@ def getInitialEntries(items):
                 searchEntry.name = str(parsed_name.replace('"', "").replace(">", ""))
                 price = parsePrice(line.split("data-currency=")[1])
                 searchEntry.price = price
-                initEntries.append(searchEntry)
+                itemAppId = (name[0].split("data-appid=")[1].replace(" ", ""))
+                if int(itemAppId.replace('"', '')) == APPID: # If from desired game
+                    initEntries.append(searchEntry)
+                
                 
     return initEntries
 
