@@ -5,7 +5,6 @@ Script asks you to enter search query ( like you would on https://steamcommunity
 Currently more items at once are supported but not optimized properly.
 
 ## TBD
-- Implement notifications
 - Implement optimization for more items
 - Improve more items input ( Currently input separated by '|' character )
 - Implement more in-depth details and statistics
