@@ -6,10 +6,8 @@ Currently more items at once are supported but not optimized properly.
 
 ## TBD
 - Implement optimization for more items
-- Improve more items input ( Currently input separated by '|' character )
 - Implement more in-depth details and statistics
-- Implement logs
-- Parsing is too complex, incorporating html parser might work better
+- Parsing is too complex, incorporating html parser might work better ( soup was fishy tho )
 - Overall general redundant complexity of the code
 - Prevent script crash when Steam is unavailable
 - Make sure all items fetched from Steam Market are CS:GO items
