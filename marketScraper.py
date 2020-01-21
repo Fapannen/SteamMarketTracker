@@ -1,10 +1,12 @@
 import requests
 import time
 import datetime
+from win10toast import ToastNotifier
 
 DEBUG = False
 LOG = True
 LOG_DELIM = "#"
+NOTIFICATIONS = True
 
 """
 PARSERS
@@ -100,8 +102,11 @@ def printEntries(ent):
     for entry in ent:
         entry.printInfo()
 
-def keepTracking(items, entries):
+def keepTracking(items, entries, notify):
     i = 0
+    if notify:
+    	nManager = ToastNotifier()
+
     while True:
         if DEBUG:
             print("Debug keepTracking iterations : " + str(i))
@@ -118,6 +123,7 @@ def keepTracking(items, entries):
                     cmpPrice = parsePrice(line.split("data-currency=")[1])
                     clone = findEntryByName(cmpName, entries)
                     if clone.price != cmpPrice:
+                        oldPrice = clone.price
                         print("Value at item " + clone.name + " has changed!")
                         print("Previous price: " + str(clone.price))
                         print("New price: " + str(cmpPrice))
@@ -126,6 +132,11 @@ def keepTracking(items, entries):
                         print("Value updated...")
                         print("-" * 50)
                         print()
+
+                        if notify:
+                        	nManager.show_toast(cmpName, "New Price: " + str(cmpPrice) + " | Previous Price : " + str(oldPrice), threaded=True,
+                                                    icon_path=None, duration=10)
+
                         if LOG:
                             with open("log.txt", 'a') as logfile:
                                 name = clone.name
@@ -141,6 +152,6 @@ def main():
     it = getItemsToTrack()
     entries = getInitialEntries(it)
     printEntries(entries) 
-    keepTracking(it, entries)
+    keepTracking(it, entries, NOTIFICATIONS)
 
 main()
