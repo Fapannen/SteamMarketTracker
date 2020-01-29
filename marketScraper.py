@@ -3,7 +3,7 @@ import time
 import datetime
 from win10toast import ToastNotifier
 
-DEBUG = False
+DEBUG = True
 LOG = True
 LOG_DELIM = "#"
 NOTIFICATIONS = False
@@ -145,8 +145,12 @@ def keepTracking(items, entries, notify):
                             with open("log.txt", 'a') as logfile:
                                 name = clone.name
                                 if '★' in name:
-                                    name.replace("★ ", "") # Encoding conflicts
-                                logfile.write(name + LOG_DELIM + str(datetime.datetime.now()) + LOG_DELIM + str(clone.price) + "\n")
+                                    name = name.replace("★ ", "") # Encoding conflicts
+
+                                txt = name + LOG_DELIM + str(datetime.datetime.now()) + LOG_DELIM + str(clone.price) + "\n"
+                                if DEBUG:
+                                    print("Writing to logfile: " +txt)
+                                logfile.write(txt)
         i += 1
 
 def main():
