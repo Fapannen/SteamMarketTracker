@@ -70,20 +70,22 @@ def getUrlContent(item):
 
 def getInitialEntries(items):
     initEntries = []
-    for item in items:
-        content = getUrlContent(item)
-        for line in content.split("market_listing_row market_recent_listing_row market_listing_searchresult"):
-            name = line.split("data-hash-name=")
-            if len(name) > 1:
-                searchEntry = SearchEntry()
-                parsed_name = name[1].split(")")[0] + ")"
-                searchEntry.name = str(parsed_name.replace('"', "").replace(">", ""))
-                price = parsePrice(line.split("data-currency=")[1])
-                searchEntry.price = price
-                itemAppId = (name[0].split("data-appid=")[1].replace(" ", ""))
-                if int(itemAppId.replace('"', '')) == APPID: # If from desired game
-                    initEntries.append(searchEntry)
-                
+    while len(initEntries) == 0:
+        if DEBUG:
+            print("Getting initial entries ...")
+        for item in items:
+            content = getUrlContent(item)
+            for line in content.split("market_listing_row market_recent_listing_row market_listing_searchresult"):
+                name = line.split("data-hash-name=")
+                if len(name) > 1:
+                    searchEntry = SearchEntry()
+                    parsed_name = name[1].split(")")[0] + ")"
+                    searchEntry.name = str(parsed_name.replace('"', "").replace(">", ""))
+                    price = parsePrice(line.split("data-currency=")[1])
+                    searchEntry.price = price
+                    itemAppId = (name[0].split("data-appid=")[1].replace(" ", ""))
+                    if int(itemAppId.replace('"', '')) == APPID: # If from desired game
+                        initEntries.append(searchEntry)
                 
     return initEntries
 
@@ -91,6 +93,7 @@ def findEntryByName(namee, entries):
     for entry in entries:
         if entry.name == namee:
             return entry
+    return None
 
 def getItemsToTrack():
     items = []
@@ -126,6 +129,13 @@ def keepTracking(items, entries, notify):
                     cmpName = str(parsed_name.replace('"', "").replace(">", ""))
                     cmpPrice = parsePrice(line.split("data-currency=")[1])
                     clone = findEntryByName(cmpName, entries)
+                    if clone is None:
+                        new = SearchEntry()
+                        new.name = cmpName
+                        new.price = cmpPrice
+                        entries.append(new)
+                        clone = new
+                        
                     if clone.price != cmpPrice:
                         oldPrice = clone.price
                         print("Value at item " + clone.name + " has changed!")
